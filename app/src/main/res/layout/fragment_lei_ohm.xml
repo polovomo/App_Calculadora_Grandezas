@@ -128,7 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Resistance (R)"
+                    android:text="Resistência (R)"
                     android:textSize="16sp"
                     android:textColor="#333333" />
 
@@ -162,7 +162,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Current (I)"
+                    android:text="Corrente (I)"
                     android:textSize="16sp"
                     android:textColor="#333333" />
 
@@ -196,7 +196,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Voltage (V)"
+                    android:text="Tensão (U)"
                     android:textSize="16sp"
                     android:textColor="#333333" />
 
@@ -230,7 +230,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Power (P)"
+                    android:text="Potência (P)"
                     android:textSize="16sp"
                     android:textColor="#333333" />
 
@@ -271,7 +271,7 @@
             android:id="@+id/btn_calculate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Calculate"
+            android:text="Calcular"
             android:backgroundTint="#2196F3"
             android:textColor="@android:color/white"
             android:textSize="16sp"

@@ -9,17 +9,17 @@
         android:id="@+id/navigation_home"
         android:name="br.ulbra.app_calculadora_eletrica.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_lei_ohm" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="br.ulbra.app_calculadora_eletrica.ui.dashboard.DashboardFragment"
+        android:name="br.ulbra.app_calculadora_eletrica.TelaMecanica"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_mecanica" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="br.ulbra.app_calculadora_eletrica.ui.notifications.NotificationsFragment"
+        android:name="br.ulbra.app_calculadora_eletrica.CalculadoraCusto"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_calculadora_custo" />
 </navigation>
