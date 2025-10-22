@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">App_Calculadora_Eletrica</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_lei_hom">Lei de Ohm</string>
+    <string name="title_mecanica">Mecânica</string>
+    <string name="title_calculadora_custo">Custos</string>
 </resources>

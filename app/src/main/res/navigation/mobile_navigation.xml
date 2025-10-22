@@ -6,20 +6,20 @@
     app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_lei_ohm"
         android:name="br.ulbra.app_calculadora_eletrica.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_lei_hom"
         tools:layout="@layout/fragment_lei_ohm" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_mecanica"
         android:name="br.ulbra.app_calculadora_eletrica.TelaMecanica"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_mecanica"
         tools:layout="@layout/fragment_mecanica" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_calculadora_custo"
         android:name="br.ulbra.app_calculadora_eletrica.CalculadoraCusto"
-        android:label="@string/title_notifications"
+        android:label="@string/title_calculadora_custo"
         tools:layout="@layout/fragment_calculadora_custo" />
 </navigation>
