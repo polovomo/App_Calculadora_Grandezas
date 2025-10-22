@@ -1,20 +1,19 @@
 package br.ulbra.app_calculadora_eletrica;
 
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import br.ulbra.app_calculadora_eletrica.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,19 +22,31 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_lei_ohm, R.id.navigation_mecanica, R.id.navigation_calculadora_custo)
-                .build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        binding.navView.setOnItemSelectedListener(item -> {
 
-        // REMOVA OU COMENTE ESTA LINHA
-        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+            NavOptions navOptions = new NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setEnterAnim(R.anim.slide_in_right)
+                    .setExitAnim(R.anim.slide_out_left)
+                    .setPopEnterAnim(R.anim.slide_in_left)
+                    .setPopExitAnim(R.anim.slide_out_right)
+                    .build();
 
-        // OK: Ainda podemos usar o BottomNavigationView
-        NavigationUI.setupWithNavController(binding.navView, navController);
+            try {
+                navController.navigate(item.getItemId(), null, navOptions);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController.navigateUp() || super.onSupportNavigateUp();
+    }
 }

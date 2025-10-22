@@ -1,0 +1,36 @@
+package br.ulbra.app_calculadora_eletrica;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+
+public class SplashActivity extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        ImageView logo = findViewById(R.id.logo);
+
+        Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fadeIn.setFillAfter(true); // Mantém o estado final
+        logo.startAnimation(fadeIn);
+
+        new Handler().postDelayed(() -> {
+            Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+            fadeOut.setFillAfter(true); // Mantém alpha = 0
+            logo.startAnimation(fadeOut);
+
+            new Handler().postDelayed(() -> {
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+                finish();
+            }, 500);
+        }, 2000);
+    }
+}
