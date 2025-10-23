@@ -7,6 +7,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatDelegate; // 👈 IMPORTANTE
+
 import br.ulbra.app_calculadora_eletrica.ui.home.LoginActivity;
 
 public class SplashActivity extends BaseActivity {
@@ -14,6 +16,10 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         setContentView(R.layout.activity_splash);
 
         ImageView logo = findViewById(R.id.logo);
