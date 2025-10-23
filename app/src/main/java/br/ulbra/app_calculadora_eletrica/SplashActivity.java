@@ -7,6 +7,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import br.ulbra.app_calculadora_eletrica.ui.home.LoginActivity;
+
 public class SplashActivity extends BaseActivity {
 
     @Override
@@ -17,16 +19,16 @@ public class SplashActivity extends BaseActivity {
         ImageView logo = findViewById(R.id.logo);
 
         Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        fadeIn.setFillAfter(true); // Mantém o estado final
+        fadeIn.setFillAfter(true);
         logo.startAnimation(fadeIn);
 
         new Handler().postDelayed(() -> {
             Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-            fadeOut.setFillAfter(true); // Mantém alpha = 0
+            fadeOut.setFillAfter(true);
             logo.startAnimation(fadeOut);
 
             new Handler().postDelayed(() -> {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 finish();
