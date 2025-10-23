@@ -13,6 +13,13 @@ public class HomeViewModel extends ViewModel {
     private final MutableLiveData<String> selectedMode;
     private final MutableLiveData<String> status;
 
+    // Novas variáveis para divisor de tensão
+    private final MutableLiveData<Double> resistor1;
+    private final MutableLiveData<Double> resistor2;
+    private final MutableLiveData<Double> voltageIn;
+    private final MutableLiveData<Double> voltageOut;
+    private final MutableLiveData<Boolean> dividerResultVisible;
+
     public HomeViewModel() {
         resistance = new MutableLiveData<>();
         resistance.setValue(5.0);
@@ -31,6 +38,22 @@ public class HomeViewModel extends ViewModel {
 
         status = new MutableLiveData<>();
         status.setValue("Agora I e V são os valores de entrada. R e P estão sendo calculados.");
+
+        // Inicializar variáveis do divisor de tensão
+        resistor1 = new MutableLiveData<>();
+        resistor1.setValue(1000.0);
+
+        resistor2 = new MutableLiveData<>();
+        resistor2.setValue(1000.0);
+
+        voltageIn = new MutableLiveData<>();
+        voltageIn.setValue(12.0);
+
+        voltageOut = new MutableLiveData<>();
+        voltageOut.setValue(6.0);
+
+        dividerResultVisible = new MutableLiveData<>();
+        dividerResultVisible.setValue(false);
     }
 
     public LiveData<Double> getResistance() {
@@ -57,6 +80,27 @@ public class HomeViewModel extends ViewModel {
         return status;
     }
 
+    // Novos métodos para divisor de tensão
+    public LiveData<Double> getResistor1() {
+        return resistor1;
+    }
+
+    public LiveData<Double> getResistor2() {
+        return resistor2;
+    }
+
+    public LiveData<Double> getVoltageIn() {
+        return voltageIn;
+    }
+
+    public LiveData<Double> getVoltageOut() {
+        return voltageOut;
+    }
+
+    public LiveData<Boolean> getDividerResultVisible() {
+        return dividerResultVisible;
+    }
+
     public void setResistance(double value) {
         resistance.setValue(value);
     }
@@ -76,6 +120,27 @@ public class HomeViewModel extends ViewModel {
     public void setSelectedMode(String mode) {
         selectedMode.setValue(mode);
         updateStatus(mode);
+    }
+
+    // Novos setters para divisor de tensão
+    public void setResistor1(double value) {
+        resistor1.setValue(value);
+    }
+
+    public void setResistor2(double value) {
+        resistor2.setValue(value);
+    }
+
+    public void setVoltageIn(double value) {
+        voltageIn.setValue(value);
+    }
+
+    public void setVoltageOut(double value) {
+        voltageOut.setValue(value);
+    }
+
+    public void setDividerResultVisible(boolean visible) {
+        dividerResultVisible.setValue(visible);
     }
 
     private void updateStatus(String mode) {
@@ -152,6 +217,27 @@ public class HomeViewModel extends ViewModel {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void calculateVoltageDivider() {
+        Double r1 = resistor1.getValue();
+        Double r2 = resistor2.getValue();
+        Double vin = voltageIn.getValue();
+
+        if (r1 == null || r2 == null || vin == null) return;
+
+        try {
+            if (r1 > 0 && r2 > 0) {
+                double vout = vin * (r2 / (r1 + r2));
+                voltageOut.setValue(vout);
+                dividerResultVisible.setValue(true);
+            } else {
+                dividerResultVisible.setValue(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            dividerResultVisible.setValue(false);
         }
     }
 }

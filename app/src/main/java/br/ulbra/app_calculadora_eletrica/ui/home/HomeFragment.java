@@ -8,12 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.core.content.ContextCompat;
 import br.ulbra.app_calculadora_eletrica.R;
 
 public class HomeFragment extends Fragment {
@@ -22,6 +22,18 @@ public class HomeFragment extends Fragment {
     private EditText etResistance, etCurrent, etVoltage, etPower;
     private TextView tvStatus;
     private Button btnRI, btnRV, btnRP, btnIV, btnIP, btnVP, btnCalculate;
+
+    // Novas variáveis para divisor de tensão
+    private EditText etResistor1, etResistor2, etVoltageIn;
+    private TextView tvVoltageOut;
+    private Button btnCalculateDivider;
+    private LinearLayout dividerResultLayout;
+
+    // Nova paleta de cores suave
+    private final int COLOR_BUTTON_DEFAULT = 0xFFE3F2FD;    // Azul muito claro
+    private final int COLOR_BUTTON_SELECTED = 0xFF1976D2;   // Azul principal
+    private final int COLOR_TEXT_DEFAULT = 0xFF1976D2;      // Azul
+    private final int COLOR_TEXT_SELECTED = 0xFFFFFFFF;     // Branco
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -33,6 +45,7 @@ public class HomeFragment extends Fragment {
         setupObservers();
         setupButtonListeners();
         setupTextWatchers();
+        setupDividerTextWatchers();
         setDefaultSelection();
 
         return root;
@@ -52,6 +65,14 @@ public class HomeFragment extends Fragment {
         btnIP = root.findViewById(R.id.btn_ip);
         btnVP = root.findViewById(R.id.btn_vp);
         btnCalculate = root.findViewById(R.id.btn_calculate);
+
+        // Novas views para divisor de tensão
+        etResistor1 = root.findViewById(R.id.et_resistor1);
+        etResistor2 = root.findViewById(R.id.et_resistor2);
+        etVoltageIn = root.findViewById(R.id.et_voltage_in);
+        tvVoltageOut = root.findViewById(R.id.tv_voltage_out);
+        btnCalculateDivider = root.findViewById(R.id.btn_calculate_divider);
+        dividerResultLayout = root.findViewById(R.id.divider_result_layout);
     }
 
     private void setupObservers() {
@@ -96,6 +117,37 @@ public class HomeFragment extends Fragment {
                 updateButtonColors(mode);
             }
         });
+
+        // Novos observadores para divisor de tensão
+        homeViewModel.getResistor1().observe(getViewLifecycleOwner(), value -> {
+            if (value != null && !isEditing(etResistor1)) {
+                etResistor1.setText(String.format("%.0f", value));
+            }
+        });
+
+        homeViewModel.getResistor2().observe(getViewLifecycleOwner(), value -> {
+            if (value != null && !isEditing(etResistor2)) {
+                etResistor2.setText(String.format("%.0f", value));
+            }
+        });
+
+        homeViewModel.getVoltageIn().observe(getViewLifecycleOwner(), value -> {
+            if (value != null && !isEditing(etVoltageIn)) {
+                etVoltageIn.setText(String.format("%.1f", value));
+            }
+        });
+
+        homeViewModel.getVoltageOut().observe(getViewLifecycleOwner(), value -> {
+            if (value != null) {
+                tvVoltageOut.setText(String.format("%.2f V", value));
+            }
+        });
+
+        homeViewModel.getDividerResultVisible().observe(getViewLifecycleOwner(), visible -> {
+            if (visible != null) {
+                dividerResultLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
     private void setupButtonListeners() {
@@ -110,6 +162,12 @@ public class HomeFragment extends Fragment {
             homeViewModel.calculateOhmsLaw();
             showToast("Calculado!");
         });
+
+        // Listener para o botão do divisor de tensão
+        btnCalculateDivider.setOnClickListener(v -> {
+            homeViewModel.calculateVoltageDivider();
+            showToast("Divisor de tensão calculado!");
+        });
     }
 
     private void setupTextWatchers() {
@@ -117,6 +175,12 @@ public class HomeFragment extends Fragment {
         setupTextWatcher(etCurrent, value -> homeViewModel.setCurrent(value));
         setupTextWatcher(etVoltage, value -> homeViewModel.setVoltage(value));
         setupTextWatcher(etPower, value -> homeViewModel.setPower(value));
+    }
+
+    private void setupDividerTextWatchers() {
+        setupTextWatcher(etResistor1, value -> homeViewModel.setResistor1(value));
+        setupTextWatcher(etResistor2, value -> homeViewModel.setResistor2(value));
+        setupTextWatcher(etVoltageIn, value -> homeViewModel.setVoltageIn(value));
     }
 
     private void setupTextWatcher(EditText editText, ValueSetter setter) {
@@ -146,45 +210,41 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateButtonColors(String selectedMode) {
-        // Reset all buttons
+        // Reset all buttons to default colors
         Button[] buttons = {btnRI, btnRV, btnRP, btnIV, btnIP, btnVP};
-        int defaultColor = ContextCompat.getColor(requireContext(), android.R.color.holo_blue_light);
-        int defaultTextColor = ContextCompat.getColor(requireContext(), android.R.color.holo_blue_dark);
 
         for (Button btn : buttons) {
-            btn.setBackgroundColor(defaultColor);
-            btn.setTextColor(defaultTextColor);
+            btn.setBackgroundColor(COLOR_BUTTON_DEFAULT);
+            btn.setTextColor(COLOR_TEXT_DEFAULT);
         }
 
         // Highlight selected button
-        int selectedColor = ContextCompat.getColor(requireContext(), android.R.color.holo_blue_dark);
-        int selectedTextColor = ContextCompat.getColor(requireContext(), android.R.color.white);
+        Button selectedButton = null;
 
         switch (selectedMode) {
             case "RI":
-                btnRI.setBackgroundColor(selectedColor);
-                btnRI.setTextColor(selectedTextColor);
+                selectedButton = btnRI;
                 break;
             case "RV":
-                btnRV.setBackgroundColor(selectedColor);
-                btnRV.setTextColor(selectedTextColor);
+                selectedButton = btnRV;
                 break;
             case "RP":
-                btnRP.setBackgroundColor(selectedColor);
-                btnRP.setTextColor(selectedTextColor);
+                selectedButton = btnRP;
                 break;
             case "IV":
-                btnIV.setBackgroundColor(selectedColor);
-                btnIV.setTextColor(selectedTextColor);
+                selectedButton = btnIV;
                 break;
             case "IP":
-                btnIP.setBackgroundColor(selectedColor);
-                btnIP.setTextColor(selectedTextColor);
+                selectedButton = btnIP;
                 break;
             case "VP":
-                btnVP.setBackgroundColor(selectedColor);
-                btnVP.setTextColor(selectedTextColor);
+                selectedButton = btnVP;
                 break;
+        }
+
+        if (selectedButton != null) {
+            selectedButton.setBackgroundColor(COLOR_BUTTON_SELECTED);
+            selectedButton.setTextColor(COLOR_TEXT_SELECTED);
         }
     }
 
